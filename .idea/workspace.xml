@@ -25,21 +25,21 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "Imaad-Daniels2903"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Imaad-Daniels2903&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubDefaultAccount">
     <option name="defaultAccountId" value="74be4db0-19eb-431c-96ed-7fb045154b75" />
   </component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Imaad-Daniels2903/Java_projects.git",
-    "accountId": "74be4db0-19eb-431c-96ed-7fb045154b75"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Imaad-Daniels2903/Java_projects.git&quot;,
+    &quot;accountId&quot;: &quot;74be4db0-19eb-431c-96ed-7fb045154b75&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -54,8 +54,9 @@
     "Application.Main.executor": "Run",
     "Application.test.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/DanClan/IdeaProjects/UNO_game",
+    "last_opened_file_path": "C:/Users/DanClan/IdeaProjects/UNO_game/UNO_game",
     "onboarding.tips.debug.path": "C:/Users/DanClan/IdeaProjects/UNO_game/src/Main.java",
     "settings.editor.selected.configurable": "vcs.Git"
   }
@@ -99,7 +100,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727372208232</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Java UNO">
+      <option name="closed" value="true" />
+      <created>1727374176806</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1727374176806</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -118,7 +127,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/main" />
+                        <option value="master" />
                       </list>
                     </value>
                   </entry>
