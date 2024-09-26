@@ -83,7 +83,7 @@ public class Game_function {
             compHand[displayArray] =computerHand.get(displayArray);
         }
 
-        System.out.println("Playerz hand: " + Arrays.deepToString(playerHand));
+        System.out.println("Players hand: " + Arrays.deepToString(playerHand));
         System.out.println("Computers hand: " + Arrays.deepToString(compHand));
     }
 
