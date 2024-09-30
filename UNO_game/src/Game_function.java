@@ -112,7 +112,6 @@ public class Game_function {
                 addCards((playersHand.get(cardIndex)[1]), computerHand);
                 System.out.println("Player played: " + Arrays.toString(playersHand.get(cardIndex)));
                 playersHand.remove(cardIndex);
-                turn = false;
                 //System.out.println(playersHand.size());
             }else{
                 System.out.println("Can't play that card");
@@ -152,15 +151,22 @@ public class Game_function {
             System.out.println("Choose Colour [R, G, B, Y]:");
             String colour = scanner.nextLine().toUpperCase();
             playedCard[0] = colour;
+            turn = true;
             return true;
             }else{
                 int ranColour = random.nextInt(((3) + 1));
                 playedCard[0] = colours[ranColour];
+                turn = false;
                 return true;
             }
         }
 
         if ((Objects.equals(playedCard[0], pileCard[0])) || (Objects.equals(playedCard[1], pileCard[1]))){
+            if (turn){
+                turn = false;
+            }else{
+                turn = true;
+            }
             return true;
         }
 
@@ -168,8 +174,8 @@ public class Game_function {
 
     }
 
-    public void addCards(String amount, ArrayList<String[]> target){
-        switch (amount){
+    public void addCards(String cardAmount, ArrayList<String[]> target){
+        switch (cardAmount){
             case "+4":
                 for (int addCards = 0; addCards <= 3; addCards++){
                     target.add(deck.get(0));

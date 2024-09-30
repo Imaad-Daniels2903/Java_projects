@@ -50,7 +50,7 @@ class Main{
             System.out.println("Play a card using index 0 - " + (playerHand.size() - 1));
             playerInput = scanner.nextLine();
             gameFunction.playCard(Integer.parseInt(playerInput));
-                        gameFunction.AIplay();
+            gameFunction.AIplay();
             //clearConsole();
             if (playerHand.isEmpty() || computerHand.isEmpty()){
                 System.out.println("GAME OVER!!");
