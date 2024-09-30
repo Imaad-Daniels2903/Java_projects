@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 
 
 public class Game_function {
@@ -10,7 +7,7 @@ public class Game_function {
     private final ArrayList<String[]> playersHand;
     private final ArrayList<String[]> computerHand;
     private final ArrayList<String[]> playPile;
-
+    public static boolean turn = true;
 
 
     public Game_function(ArrayList<String[]> deck, ArrayList<String[]> playersHand, ArrayList<String[]> computerHand, ArrayList<String[]> playPile){
@@ -84,7 +81,9 @@ public class Game_function {
         }
 
         System.out.println("Players hand: " + Arrays.deepToString(playerHand));
+        System.out.println(playersHand.size());
         System.out.println("Computers hand: " + Arrays.deepToString(compHand));
+        System.out.println(computerHand.size());
     }
 
 
@@ -106,33 +105,84 @@ public class Game_function {
 
 
     public void playCard(int cardIndex){
-        String[] pileCard = playPile.get(playPile.size() -1);
-        if (Game_function.playLogic((playersHand.get(cardIndex)), pileCard)){
-            playPile.add(playersHand.get(cardIndex));
-            System.out.println("Player played: " + Arrays.toString(playersHand.get(cardIndex)));
-            playersHand.remove(cardIndex);
-            //System.out.println(playersHand.size());
-        }else{
-            System.out.println("Can't play that card");
+        if (turn){
+            String[] pileCard = playPile.get(playPile.size() -1);
+            if (Game_function.playLogic((playersHand.get(cardIndex)), pileCard)){
+                playPile.add(playersHand.get(cardIndex));
+                addCards((playersHand.get(cardIndex)[1]), computerHand);
+                System.out.println("Player played: " + Arrays.toString(playersHand.get(cardIndex)));
+                playersHand.remove(cardIndex);
+                turn = false;
+                //System.out.println(playersHand.size());
+            }else{
+                System.out.println("Can't play that card");
+                turn = true;
+            }
         }
     }
 
 
 
-    public void AIplay(int cardIndex){
-        playPile.add(computerHand.get(cardIndex));
-        System.out.println("Computer played: " + Arrays.toString(computerHand.get(cardIndex)));
-        computerHand.remove(cardIndex);
+    public void AIplay(){
+        if (!turn){
+            for (int AiLoop = 0; AiLoop < computerHand.size(); AiLoop++){
+                if (Game_function.playLogic(computerHand.get(AiLoop) ,playPile.get(playPile.size() - 1))){
+                    playPile.add(computerHand.get(AiLoop));
+                    addCards((computerHand.get(AiLoop)[1]),playersHand);
+                    System.out.println("Computer played: " + Arrays.toString(computerHand.get(AiLoop)));
+                    computerHand.remove(AiLoop);
+                    break;
+                }
+            }
+            turn = false;
+        }
+
+
         //System.out.println(computerHand.size());
     }
 
 
 
     public static boolean playLogic(String[] playedCard, String[] pileCard){
+        String[] colours = new String[]{"R", "B", "G", "Y"};
+        Random random = new Random();
+        if (Objects.equals(playedCard[0], "Wild")){
+            if (turn){
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Choose Colour [R, G, B, Y]:");
+            String colour = scanner.nextLine().toUpperCase();
+            playedCard[0] = colour;
+            return true;
+            }else{
+                int ranColour = random.nextInt(((3) + 1));
+                playedCard[0] = colours[ranColour];
+                return true;
+            }
+        }
+
         if ((Objects.equals(playedCard[0], pileCard[0])) || (Objects.equals(playedCard[1], pileCard[1]))){
             return true;
         }
+
         return false;
+
+    }
+
+    public void addCards(String amount, ArrayList<String[]> target){
+        switch (amount){
+            case "+4":
+                for (int addCards = 0; addCards <= 3; addCards++){
+                    target.add(deck.get(0));
+                    deck.remove(0);
+                }
+                break;
+            case "+2":
+                for (int addCards = 0; addCards <= 1; addCards++){
+                    target.add(deck.get(0));
+                    deck.remove(0);
+                }
+                break;
+        }
     }
 
 }
