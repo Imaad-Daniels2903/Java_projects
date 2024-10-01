@@ -47,9 +47,9 @@ class Main{
 
             gameFunction.displayHands();
             gameFunction.displayPlayCard();
-            System.out.println("Play a card using index 0 - " + (playerHand.size() - 1));
-            playerInput = scanner.nextLine();
-            gameFunction.playCard(Integer.parseInt(playerInput));
+            /*System.out.println("Play a card using index 0 - " + (playerHand.size() - 1));
+            playerInput = scanner.nextLine();*/
+            gameFunction.playCard();
             gameFunction.AIplay();
             //clearConsole();
             if (playerHand.isEmpty() || computerHand.isEmpty()){
