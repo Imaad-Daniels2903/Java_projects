@@ -8,6 +8,9 @@ public class Game_function {
     private final ArrayList<String[]> computerHand;
     private final ArrayList<String[]> playPile;
     public static boolean turn = true;
+    public static final String[] colours = new String[] {"R", "B", "G", "Y"};
+    public static final String[] powerCards = new String[] {"Reverse", "Block", "+2"};
+    public static final String[] wildCards = new String[] {"anyColour", "+4"};
 
     public Game_function(ArrayList<String[]> deck, ArrayList<String[]> playersHand, ArrayList<String[]> computerHand, ArrayList<String[]> playPile){
         this.computerHand = computerHand;
@@ -20,9 +23,6 @@ public class Game_function {
 
 
     public void generateDeck(){
-        String[] colours = new String[] {"R", "B", "G", "Y"};
-        String[] powerCards = new String[] {"Reverse", "Block", "+2"};
-        String[] wildCards = new String[] {"anyColour", "+4"};
         //Generating Numbered Cards
         for (int numberLoop = 0; numberLoop <= 9; numberLoop++){
             if (numberLoop == 0){
@@ -55,14 +55,18 @@ public class Game_function {
 
     public void deal(){
         Collections.shuffle(deck);
+        int topCard = 0;
         for (int deckLoop = 0; playersHand.size() <= 6; deckLoop++) {
             playersHand.add(deck.get(0));
             deck.remove(0);
             computerHand.add(deck.get(0));
             deck.remove(0);
         }
-        playPile.add(deck.get(0));
-        deck.remove(0);
+        while ((Arrays.asList(powerCards).contains(deck.get(topCard)[1])) || (Arrays.asList(wildCards).contains(deck.get(topCard)[1]))){
+            topCard++;
+        }
+        playPile.add(deck.get(topCard));
+        deck.remove(topCard);
     }
 
 
@@ -123,6 +127,7 @@ public class Game_function {
                 default:
                     if (Game_function.playLogic((playersHand.get(Integer.parseInt(cardIndex))), pileCard)){
                         playPile.add(playersHand.get(Integer.parseInt(cardIndex)));
+                        powerCards(playersHand.get(Integer.parseInt(cardIndex)));
                         addCards((playersHand.get(Integer.parseInt(cardIndex))[1]), computerHand);
                         System.out.println("Player played: " + Arrays.toString(playersHand.get(Integer.parseInt(cardIndex))));
                         playersHand.remove(Integer.parseInt(cardIndex));
@@ -144,6 +149,7 @@ public class Game_function {
             for (int AiLoop = 0; AiLoop < computerHand.size(); AiLoop++){
                 if (Game_function.playLogic(computerHand.get(AiLoop) ,playPile.get(playPile.size() - 1))){
                     playPile.add(computerHand.get(AiLoop));
+                    powerCards(computerHand.get(AiLoop));
                     addCards((computerHand.get(AiLoop)[1]),playersHand);
                     System.out.println("Computer played: " + Arrays.toString(computerHand.get(AiLoop)));
                     computerHand.remove(AiLoop);
@@ -172,7 +178,6 @@ public class Game_function {
 
 
     public static boolean playLogic(String[] playedCard, String[] pileCard){
-        String[] colours = new String[]{"R", "B", "G", "Y"};
         Random random = new Random();
         if (Objects.equals(playedCard[0], "Wild")){
             if (turn){
@@ -193,19 +198,19 @@ public class Game_function {
                 return true;
             }
         }
-        switch (playedCard[1]){
-            case "Reverse", "Block":
-                keepTurn();
-                break;
-            default:
-                if ((Objects.equals(playedCard[0], pileCard[0])) || (Objects.equals(playedCard[1], pileCard[1]))){
-                    if (turn){
-                        turn = false;
-                    }else{
-                        turn = true;
-                    }
-                    return true;
+
+        if ((Objects.equals(playedCard[0], pileCard[0])) || (Objects.equals(playedCard[1], pileCard[1]))){
+            if (turn && !(Arrays.asList(powerCards).contains(playedCard[1]))){
+                turn = false;
+            }else{
+                if (!turn && !(Arrays.asList(powerCards).contains(playedCard[1]))){
+                turn = true;
+                }else{
+                    turn = false;
                 }
+                turn = true;
+            }
+            return true;
         }
         return false;
 
@@ -235,18 +240,10 @@ public class Game_function {
 
 
 
-    public void checkInput(String targetInput){
-        switch (targetInput.toUpperCase()){
-            case "D":
-                playersHand.add(deck.get(0));
-                deck.remove(0);
-                displayHands();
-                turn = true;
-                break;
-
-            case "C":
-                turn = false;
-                break;
+    public void powerCards(String[] playedCard){
+        switch (playedCard[1]){
+            case "Reverse", "Block", "+2":
+                keepTurn();
         }
     }
 
