@@ -109,16 +109,28 @@ public class Game_function {
             System.out.println("Play a card using index 0 - " + (playersHand.size() - 1));
             String cardIndex = scanner.nextLine();
             String[] pileCard = playPile.get(playPile.size() -1);
-            checkInput(cardIndex);
-            if (Game_function.playLogic((playersHand.get(Integer.parseInt(cardIndex))), pileCard)){
-                playPile.add(playersHand.get(Integer.parseInt(cardIndex)));
-                powerCards((playersHand.get(Integer.parseInt(cardIndex))[1]), computerHand);
-                System.out.println("Player played: " + Arrays.toString(playersHand.get(Integer.parseInt(cardIndex))));
-                playersHand.remove(Integer.parseInt(cardIndex));
-                //System.out.println(playersHand.size());
-            }else{
-                System.out.println("Can't play that card");
-                turn = true;
+            switch (cardIndex.toUpperCase()){
+                case "D":
+                    playersHand.add(deck.get(0));
+                    deck.remove(0);
+                    displayHands();
+                    turn = true;
+                    break;
+
+                case "C":
+                    turn = false;
+                    break;
+                default:
+                    if (Game_function.playLogic((playersHand.get(Integer.parseInt(cardIndex))), pileCard)){
+                        playPile.add(playersHand.get(Integer.parseInt(cardIndex)));
+                        addCards((playersHand.get(Integer.parseInt(cardIndex))[1]), computerHand);
+                        System.out.println("Player played: " + Arrays.toString(playersHand.get(Integer.parseInt(cardIndex))));
+                        playersHand.remove(Integer.parseInt(cardIndex));
+                        //System.out.println(playersHand.size());
+                    }else{
+                        System.out.println("Can't play that card");
+                        turn = true;
+                    }
             }
         }
     }
@@ -132,7 +144,7 @@ public class Game_function {
             for (int AiLoop = 0; AiLoop < computerHand.size(); AiLoop++){
                 if (Game_function.playLogic(computerHand.get(AiLoop) ,playPile.get(playPile.size() - 1))){
                     playPile.add(computerHand.get(AiLoop));
-                    powerCards((computerHand.get(AiLoop)[1]),playersHand);
+                    addCards((computerHand.get(AiLoop)[1]),playersHand);
                     System.out.println("Computer played: " + Arrays.toString(computerHand.get(AiLoop)));
                     computerHand.remove(AiLoop);
                     playCount++;
@@ -202,7 +214,7 @@ public class Game_function {
 
 
 
-    public void powerCards(String cardAmount, ArrayList<String[]> target){
+    public void addCards(String cardAmount, ArrayList<String[]> target){
         switch (cardAmount){
             case "+4":
                 for (int addCards = 0; addCards <= 3; addCards++){
