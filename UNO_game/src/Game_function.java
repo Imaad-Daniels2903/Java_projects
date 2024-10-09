@@ -8,6 +8,9 @@ public class Game_function {
     private final ArrayList<String[]> computerHand;
     private final ArrayList<String[]> playPile;
     public static boolean turn = true;
+    public static boolean playerTurn = true;
+    public static boolean computerTurn = false;
+    public static boolean computerDraw = true;
     public static final String[] colours = new String[] {"R", "B", "G", "Y"};
     public static final String[] powerCards = new String[] {"Reverse", "Block", "+2"};
     public static final String[] wildCards = new String[] {"anyColour", "+4"};
@@ -109,7 +112,7 @@ public class Game_function {
 
     public void playCard(){
         Scanner scanner = new Scanner(System.in);
-        if (turn){
+        if (playerTurn){
             System.out.println("Play a card using index 0 - " + (playersHand.size() - 1));
             String cardIndex = scanner.nextLine();
             String[] pileCard = playPile.get(playPile.size() -1);
@@ -118,23 +121,29 @@ public class Game_function {
                     playersHand.add(deck.get(0));
                     deck.remove(0);
                     displayHands();
-                    turn = true;
+                    //switchTurn(computerTurn, playerTurn);
+                    playerTurn = true;
+                    computerTurn = false;
                     break;
 
                 case "C":
-                    turn = false;
+                    //switchTurn(playerTurn, computerTurn);
+                    playerTurn = false;
+                    computerTurn = true;
                     break;
                 default:
                     if (Game_function.playLogic((playersHand.get(Integer.parseInt(cardIndex))), pileCard)){
                         playPile.add(playersHand.get(Integer.parseInt(cardIndex)));
-                        powerCards(playersHand.get(Integer.parseInt(cardIndex)));
+                       // powerCards(playersHand.get(Integer.parseInt(cardIndex)));
                         addCards((playersHand.get(Integer.parseInt(cardIndex))[1]), computerHand);
                         System.out.println("Player played: " + Arrays.toString(playersHand.get(Integer.parseInt(cardIndex))));
                         playersHand.remove(Integer.parseInt(cardIndex));
                         //System.out.println(playersHand.size());
                     }else{
                         System.out.println("Can't play that card");
-                        turn = true;
+                        //switchTurn(computerTurn, playerTurn);
+                        computerTurn = false;
+                        playerTurn = true;
                     }
             }
         }
@@ -143,27 +152,28 @@ public class Game_function {
 
 
     public void AIplay(){
-        boolean computerDraw = true;
-        if (!turn){
+        if (computerTurn){
             int playCount = 0;
             for (int AiLoop = 0; AiLoop < computerHand.size(); AiLoop++){
                 if (Game_function.playLogic(computerHand.get(AiLoop) ,playPile.get(playPile.size() - 1))){
                     playPile.add(computerHand.get(AiLoop));
-                    powerCards(computerHand.get(AiLoop));
+                   // powerCards(computerHand.get(AiLoop));
                     addCards((computerHand.get(AiLoop)[1]),playersHand);
                     System.out.println("Computer played: " + Arrays.toString(computerHand.get(AiLoop)));
                     computerHand.remove(AiLoop);
-                    playCount++;
                     break;
                 }
+                playCount++;
             }
             if (playCount >= computerHand.size() || !computerDraw){
                 if (computerDraw){
                     computerHand.add(deck.get(0));
+                    deck.remove(0);
                     computerDraw = false;
-                }
-                if (!computerDraw){
-                    turn = true;
+                }else{
+                    //switchTurn(computerTurn, playerTurn);
+                    computerTurn = false;
+                    playerTurn = true;
                     computerDraw = true;
                 }
 
@@ -180,36 +190,60 @@ public class Game_function {
     public static boolean playLogic(String[] playedCard, String[] pileCard){
         Random random = new Random();
         if (Objects.equals(playedCard[0], "Wild")){
-            if (turn){
+            if (playerTurn){
             Scanner scanner = new Scanner(System.in);
             System.out.println("Choose Colour [R, G, B, Y]:");
             String colour = scanner.nextLine().toUpperCase();
             playedCard[0] = colour;
+            //switchTurn(computerTurn, playerTurn);
+            computerTurn = false;
+            playerTurn = true;
             if (Objects.equals(playedCard[1], "anyColour")){
-                turn = false;
+                //switchTurn(playerTurn, computerTurn);
+                playerTurn = false;
+                computerTurn = true;
             }
             return true;
             }else{
                 int ranColour = random.nextInt(((3) + 1));
                 playedCard[0] = colours[ranColour];
+                //switchTurn(playerTurn, computerTurn);
+                playerTurn = false;
+                computerTurn = true;
                 if (Objects.equals(playedCard[1], "anyColour")){
-                    turn = true;
+                    //switchTurn(computerTurn, playerTurn);
+                    computerTurn = false;
+                    playerTurn = true;
                 }
                 return true;
             }
         }
 
         if ((Objects.equals(playedCard[0], pileCard[0])) || (Objects.equals(playedCard[1], pileCard[1]))){
-            if (turn && !(Arrays.asList(powerCards).contains(playedCard[1]))){
-                turn = false;
-            }else{
-                if (!turn && !(Arrays.asList(powerCards).contains(playedCard[1]))){
-                turn = true;
+            String powerType = playedCard[1];
+            if ((Arrays.asList(powerCards).contains(powerType))){
+                if (playerTurn){
+                    //switchTurn(computerTurn, playerTurn);
+                    computerTurn = false;
+                    playerTurn =true;
                 }else{
-                    turn = false;
+                    //switchTurn(playerTurn, computerTurn);
+                    playerTurn = false;
+                    computerTurn = true;
                 }
-                turn = true;
+            }else{
+                if (playerTurn){
+                    //switchTurn(playerTurn, computerTurn);
+                    playerTurn = false;
+                    computerTurn = true;
+                }else{
+                    //switchTurn(computerTurn, playerTurn);
+                    computerTurn = false;
+                    playerTurn = true;
+                }
+
             }
+
             return true;
         }
         return false;
@@ -226,14 +260,14 @@ public class Game_function {
                     target.add(deck.get(0));
                     deck.remove(0);
                 }
-                keepTurn();
+                //keepTurn();
                 break;
             case "+2":
                 for (int addCards = 0; addCards <= 1; addCards++){
                     target.add(deck.get(0));
                     deck.remove(0);
                 }
-                keepTurn();
+                //keepTurn();
                 break;
         }
     }
@@ -250,11 +284,22 @@ public class Game_function {
 
 
     public static void keepTurn(){
-        if (turn){
-            turn = true;
+        if (playerTurn){
+            //switchTurn(computerTurn, playerTurn);
+            computerTurn = false;
+            playerTurn = true;
         }else{
-            turn = false;
+            //switchTurn(playerTurn, computerTurn);
+            playerTurn = false;
+            computerTurn = true;
         }
+    }
+
+
+
+    public static void switchTurn(boolean primaryTurn, boolean secondaryTurn){
+        primaryTurn = false;
+        secondaryTurn = true;
     }
 
 }
