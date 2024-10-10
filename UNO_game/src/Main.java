@@ -38,11 +38,12 @@ class Main{
         gameState = true;
 
         while (gameState){
-
+            System.out.println("-------------------------------------------------------------------------------");
             gameFunction.displayHands();
             gameFunction.displayPlayCard();
             gameFunction.playCard();
             gameFunction.AIplay();
+            System.out.println("-------------------------------------------------------------------------------");
             //clearConsole();
             if (playerHand.isEmpty() || computerHand.isEmpty()){
                 System.out.println("GAME OVER!!");
