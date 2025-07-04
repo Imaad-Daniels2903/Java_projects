@@ -8,12 +8,12 @@ public class AI {
     static Boolean attack = false;
     
     public AI(ArrayList<ArrayList<String>> board, String turn) {
-        AI.board = board;
-        AI.turn = turn;
+        this.board = board;
+        this.turn = turn;
         if (turn.equals("X")) {
-            opponentTurn = "O";
+            this.opponentTurn = "O";
         } else {
-            opponentTurn = "X";
+            this.opponentTurn = "X";
         }
         
     }
@@ -33,7 +33,7 @@ public class AI {
             "2,2", "BL"
     );
     
-    public static String[] aiPlay() {
+    public static String aiPlay() {
         int emptyCnt = 0;
         for(ArrayList<String> tempBoard : board) {
             for (String tempSqr : tempBoard) {
@@ -44,11 +44,15 @@ public class AI {
         }
         
         if (emptyCnt == 9 || emptyCnt == 8 && board.get(1).get(1).equals(" ")) {
-            String[] stringSplit = ("MM" + "-" + turn).toUpperCase().split("-");
-            return stringSplit;
+            return "MM" + "-" + turn;
         } else if (emptyCnt == 8 && !board.get(1).get(1).equals(" ")){
-            String[] stringSplit = randomPlay().toUpperCase().split("-");
-            return stringSplit;
+            ArrayList<String> keys = new ArrayList<>(moves.keySet());
+            Random rand = new Random();
+            String ranKey = keys.get((rand.nextInt(keys.size())));
+            while (moves.get(ranKey).equals(" ")) {
+                ranKey = keys.get((rand.nextInt(keys.size())));
+            }
+            return moves.get(ranKey);
         } else {
             ArrayList<ArrayList<String>> tempBoard = board;
             ArrayList<ArrayList<Integer>> oppWin = new ArrayList<>();
@@ -58,15 +62,13 @@ public class AI {
                     if (tempBoard.get(x).get(y).equals(" ")) {
                         tempBoard.get(x).set(y, opponentTurn);
                         if (checkWin(tempBoard)) {
-                            oppWin.add( new ArrayList<>(Arrays.asList(x, y)));
-                            tempBoard.get(x).set(y, " ");
+                            oppWin.add((ArrayList<Integer>) Arrays.asList(x, y));
                             defend = true;
                         } else {
                             tempBoard.get(x).set(y, turn);
                         }
                         if (checkWin(tempBoard)) {
-                            aiWin.add(new ArrayList<>(Arrays.asList(x, y)));
-                            tempBoard.get(x).set(y, " ");
+                            aiWin.add((ArrayList<Integer>) Arrays.asList(x, y));
                             attack = true;
                         } else {
                             tempBoard.get(x).set(y, " ");
@@ -80,20 +82,18 @@ public class AI {
             if (attack) {
                 x = String.valueOf(aiWin.get(0).get(0));
                 y = String.valueOf(aiWin.get(0).get(1));
-                outMove = moves.get(x + "," + y) + "-" + turn;
-                String[] stringSplit = outMove.toUpperCase().split("-");
-                return stringSplit;
-            } else if (defend) {
+                outMove = moves.get(x + "," + y);
+                return outMove;
+            } else if (defend && !attack) {
                 x = String.valueOf(oppWin.get(0).get(0));
                 y = String.valueOf(oppWin.get(0).get(1));
-                outMove = moves.get(x + "," + y) + "-" + turn;
-                String[] stringSplit = outMove.toUpperCase().split("-");
-                return stringSplit;
+                outMove = moves.get(x + "," + y);
             } else {
-                String[] stringSplit = randomPlay().toUpperCase().split("-");
-                return stringSplit;
+
             }
         }
+
+        return null;
     }
 
     public static Boolean checkWin(ArrayList<ArrayList<String>> testBoard) {
@@ -126,25 +126,8 @@ public class AI {
         return false;
     }
 
-    public static String randomPlay() {
-        ArrayList<String> randomMoves = new ArrayList<>();
-        for (int x = 0; x < board.size(); x++) {
-            for (int y = 0; y < board.get(x).size(); y++) {
-                String block = board.get(x).get(y);
-                if (block.equals(" ")) {
-                    String ranMove = x + "," + y;
-                    randomMoves.add(ranMove);
-                }
-            }
-        }
-
-        ArrayList<String> keys = new ArrayList<>(moves.keySet());
-        Random rand = new Random();
-        String ranKey = keys.get((rand.nextInt(keys.size())));
-        while (!randomMoves.contains(ranKey)) {
-            ranKey = keys.get((rand.nextInt(keys.size())));
-        }
-        return moves.get(ranKey) + "-" + turn;
+    public static void offensivePlay() {
+        
     }
 
     public static void main(String[] args) {

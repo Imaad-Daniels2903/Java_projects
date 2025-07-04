@@ -7,8 +7,6 @@ public class Game {
     private static String userInput;
     private static String winner;
     private static String playerTurn;
-    private static String humanTurn;
-    private static String aiTurn;
     private static final ArrayList<ArrayList<String>> board = new ArrayList<>();
     private static ArrayList<String> moveList = new ArrayList<>();
     private static  ArrayList<String> piece = new ArrayList<>(Arrays.asList("O", "X"));
@@ -74,73 +72,11 @@ public class Game {
                 }
 
             }
-        } else if (players == 1) {
-            Scanner gameScan = new Scanner(System.in);
-
-            while(!endGame) {
-                setBoard();
-                userInput = gameScan.nextLine();
-                if (userInput.equals("close")) {
-                    endGame =  true;
-
-                } else {
-                    if (userInput.contains("-")) {
-                        String[] stringSplit = userInput.toUpperCase().split("-");
-                        if (moves.containsKey(stringSplit[0]) && stringSplit.length == 2 && piece.contains(stringSplit[1])) {
-                            if (!moveList.contains(userInput.toUpperCase())) {
-                                if (playerTurn == null) {
-                                    playerTurn = stringSplit[1];
-                                    humanTurn = playerTurn;
-                                    if (humanTurn.equals("X")) {
-                                        aiTurn = "O";
-                                    } else {
-                                        aiTurn = "X";
-                                    }
-                                    play(stringSplit);
-                                    swithTurn();
-                                    checkWin();
-                                    new AI(board, aiTurn);
-                                    play(AI.aiPlay());
-                                    swithTurn();
-                                    checkWin();
-                                } else {
-                                    if (stringSplit[1].equals(playerTurn)) {
-                                        moveList.add(userInput.toUpperCase());
-
-                                        play(stringSplit);
-                                        swithTurn();
-                                        checkWin();
-                                        if (!endGame) {
-                                            new AI(board, aiTurn);
-                                            play(AI.aiPlay());
-                                            swithTurn();
-                                            checkWin();
-                                        }
-
-
-                                    } else {
-                                        System.out.println("IT'S NOT UR TURN!!");
-                                    }
-                                }
-
-
-                            } else {
-                                System.out.println("Invalid move");
-                            }
-                        } else {
-                            System.out.println("Invalid move please use move format (eg.MM-X, BR-O)");
-                        }
-                    } else {
-                        System.out.println("Invalid move please use move format (eg.MM-X, BR-O)");
-                    }
-                }
-
-            }
         }
     }
 
     public static void setBoard() {
-        if (board.isEmpty()) {
+        if (board.size() == 0) {
             String[] cords = {"T", "M", "B"};
             for (int x = 0 ; x < 3; x++) {
                 System.out.println( cords[x] + "    "  +   "|"  +  "     "  +  "|"  +  "    " );
@@ -157,14 +93,12 @@ public class Game {
             System.out.println("  " + "R" + "  "  +   " "  +  "  " + "M" + "  "  +  " "  +  "  " + "L" + " " );
             System.out.println("To play use co-ordinates as shown above and X or O (eg.TL-O, BM-X)");
         } else {
-            String[] cords = {"T", "M", "B"};
             for (int y = 0; y < 3; y++) {
-                System.out.println(cords[y] + "  " + board.get(y).get(0) + "  "  +   "|"  +  "  " + board.get(y).get(1) + "  "  +  "|"  +  "  " + board.get(y).get(2) + " " );
+                System.out.println(" " + board.get(y).get(0) + "  "  +   "|"  +  "  " + board.get(y).get(1) + "  "  +  "|"  +  "  " + board.get(y).get(2) + " " );
                 if (y != 2) {
-                    System.out.println("  ——— " + "+"  + " ——— "  + "+" + " ———");
+                    System.out.println("——— " + "+"  + " ——— "  + "+" + " ———");
                 }
             }
-            System.out.println("  " + "R" + "  "  +   " "  +  "  " + "M" + "  "  +  " "  +  "  " + "L" + " " );
         }
     }
 
@@ -228,7 +162,6 @@ public class Game {
     }
 
     public static void main(String[] args) {
-
-        start(1);
+        start(2);
     }
 }
