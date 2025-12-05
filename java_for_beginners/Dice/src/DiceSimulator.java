@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 public class DiceSimulator {
 
     public class Dice{
@@ -28,6 +30,9 @@ public class DiceSimulator {
             int min = 0;
             int max = 99;
             int sum = sum(weights);
+            HashMap<Integer, Integer> distro = new HashMap<>();
+
+            
 
             int randomNum = (int) (Math.random() * (max - min + 1)) + min;
         }
