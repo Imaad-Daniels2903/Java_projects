@@ -162,6 +162,6 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        start(2);
+        start(1);
     }
 }
