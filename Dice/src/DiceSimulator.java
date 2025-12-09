@@ -1,22 +1,19 @@
-import java.util.Map;
-import java.util.ArrayList;
+            import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 public class DiceSimulator {
-    private int dice;
-    private int faces;
-    private int rolls;
-    private List<Integer> weights;
-    private int bins;
+    private final int dice;
+    private final int faces;
+    private final int rolls;
+    private final List<Integer> weights;
 
-    public DiceSimulator(int dice, int faces, int rolls, List<Integer> weights, int bins){
+    public DiceSimulator(int dice, int faces, int rolls, List<Integer> weights){
         this.dice = dice;
         this.faces = faces;
         this.rolls = rolls;
         this.weights = weights;
-        this.bins = bins;
     }
 
     private int sum(List<Integer> list){
@@ -34,7 +31,8 @@ public class DiceSimulator {
         HashMap<Integer, Integer> distro = new HashMap<>();
         
         for(int i = 0; i < weights.size(); i++){
-            distro.put(i, (weights.get(i) / sum * 100));
+            int percentage = (int) Math.round((double) (weights.get(1)) / sum * 100);
+            distro.put(i, percentage);
             for(int j = 0; j < distro.get(i); j++){
                 items.add(list.get(i));
             }
@@ -50,7 +48,7 @@ public class DiceSimulator {
         
             }
             else{
-                outList.add(randomNum);
+                outList.add(items.get(randomNum));
             }
         }
 
@@ -64,7 +62,7 @@ public class DiceSimulator {
             facesList.add(i);
         }
         for(int i = 0; i < dice; i++){
-            outcomes.add(choices(facesList, weights, 1).get(0));
+            outcomes.add(choices(facesList, weights, 1).getFirst());
         }
         return outcomes.stream().mapToInt(Integer::intValue).sum(); 
     }
@@ -77,33 +75,43 @@ public class DiceSimulator {
         return outcomes;
     }
 
-//    public HashMap<Integer, Integer> getDistrubution(){
-//
-//    }
+    
     public void getStats(){
+        int median;
         List<Integer> outcomes = getOutcomes();
         Collections.sort(outcomes);
         HashMap<Integer, Integer> frequencyDstribution = new HashMap<>();
 
-        int N = this.rolls;
-        double mean = sum(outcomes) / N;
-        
+        double mean = (double) sum(outcomes) / this.rolls;
+
         if(outcomes.size() % 2 == 0){
-            double median = (outcomes.get(outcomes.size() / 2) + outcomes.get((outcomes.size() / 2) - 1)) / 2;
+            median = (int)Math.round((double) (outcomes.get(outcomes.size() / 2) + outcomes.get((outcomes.size() / 2) - 1)) / 2);
 
         }
         else{
-            int median = (outcomes.get(Math.round(outcomes.size() / 2)));
+            median = (outcomes.get(Math.round((float) (outcomes.size()) / 2)));
         }
 
+        for(int outcome: outcomes){
+            if(frequencyDstribution.containsKey(outcome)){
+                frequencyDstribution.put(outcome, frequencyDstribution.get(outcome) + 1);
+            }
+            else{
+                frequencyDstribution.put(outcome, 1);
+            }
+        }
+
+        
+
         System.out.println(mean);
+        System.out.println(median);
         System.out.println(outcomes);
-//        System.out.println(median);
+        System.out.println(frequencyDstribution);
     }
 
     public static void main(String[] args) {
-        List<Integer> weights = new ArrayList<>(List.of(1, 1, 1, 1, 2, 2));
-        DiceSimulator dice = new DiceSimulator(2, 6, 100, weights, 1);
+        List<Integer> weights = new ArrayList<>(List.of(1, 2, 3, 2, 1, 5));
+        DiceSimulator dice = new DiceSimulator(5    , 6, 1000, weights);
         dice.getStats();
     }
 }
